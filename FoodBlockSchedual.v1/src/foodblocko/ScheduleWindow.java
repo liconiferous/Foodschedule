@@ -13,12 +13,13 @@ import java.util.*;
 import java.util.List;
 
 public class ScheduleWindow extends JFrame {
-    private final JTable table;
-    private final DefaultTableModel model;
-    private final Map<String, String> recipes = new HashMap<>(); // Store recipes
+    final JTable table;
+    final DefaultTableModel model;
+    final Map<String, String> recipes = new HashMap<>(); // Store recipes
+    public AbstractButton timeComboBox;
     DatabaseConnection DB = new DatabaseConnection();
     private String userName = "";
-    private String dateInfo = "";
+    String dateInfo = "";
 
     public ScheduleWindow(String name) {
         this.userName = name;
@@ -72,9 +73,9 @@ public class ScheduleWindow extends JFrame {
             }
         });
 
-        JLabel nameLabel = new JLabel("用户名:");
+        JLabel nameLabel = new JLabel("Username:");
         JLabel nameItem = new JLabel(this.userName);
-        JLabel timeLabel = new JLabel("时间:");
+        JLabel timeLabel = new JLabel("Time:");
         JComboBox<String> timeComboBox = new JComboBox<>(getWeekStartEnd(2024).stream().toArray(String[]::new));
         JPanel headerPanel = new JPanel(new GridLayout(0, 4, 10, 10));
         timeComboBox.addItemListener(new ItemListener() {
@@ -97,7 +98,7 @@ public class ScheduleWindow extends JFrame {
         setVisible(true);
     }
 
-    private ArrayList<String> getWeekStartEnd(int year) {
+    ArrayList<String> getWeekStartEnd(int year) {
         ArrayList<String> list = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Calendar yearCalendar = new GregorianCalendar();
@@ -112,15 +113,15 @@ public class ScheduleWindow extends JFrame {
             calendar.set(Calendar.MINUTE, 0);
             calendar.set(Calendar.SECOND, 0);
             calendar.set(Calendar.MILLISECOND, 0);
-            Date monday = calendar.getTime(); // 周一的开始时间
+            Date monday = calendar.getTime(); // Start time of Monday
             calendar.add(Calendar.DAY_OF_WEEK, 6);
-            Date sunday = calendar.getTime(); // 周日的结束时间
-            list.add(String.format("%s 至 %s", sdf.format(monday), sdf.format(sunday)));
+            Date sunday = calendar.getTime(); // End time of sunday
+            list.add(String.format("%s to %s", sdf.format(monday), sdf.format(sunday)));
         }
         return list;
     }
 
-    private void openMealInputDialog(int row, int column) {
+    void openMealInputDialog(int row, int column) {
         JComboBox<String> mealTypeComboBox = new JComboBox<>(new String[]{"Breakfast", "Lunch", "Dinner", "Snack"});
         JTextField mealNameTextField = new JTextField();
         JTextField recipeTextField = new JTextField();
@@ -143,7 +144,7 @@ public class ScheduleWindow extends JFrame {
         }
     }
 
-    private void editMealInputDialog(String currentValue, int row, int column) {
+    void editMealInputDialog(String currentValue, int row, int column) {
         String[] parts = currentValue.split(" \\(");
         String mealName = parts[0];
         String mealType = parts.length > 1 ? parts[1].replace(")", "") : "";
@@ -172,7 +173,7 @@ public class ScheduleWindow extends JFrame {
         }
     }
 
-    private void updateTableCell(String mealType, String mealName, int row, int column) {
+    void updateTableCell(String mealType, String mealName, int row, int column) {
         if (mealName != null && mealType != null && mealName.length() > 0 && mealType.length() > 0) {
             model.setValueAt(mealName + " (" + mealType + ")", row, column);
         } else {
@@ -181,7 +182,7 @@ public class ScheduleWindow extends JFrame {
         model.fireTableCellUpdated(row, column);
     }
 
-    private void updateTable() {
+    void updateTable() {
         for (int r = 0; r < table.getRowCount(); r++) {
             for (int i = 1; i < table.getColumnCount(); i++) {
                 updateTableCell("", "", r, i);
@@ -205,24 +206,24 @@ public class ScheduleWindow extends JFrame {
     public static String getWeekDate() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Calendar cal = Calendar.getInstance();
-        // 设置一个星期的第一天，按中国的习惯一个星期的第一天是星期一
+
         cal.setFirstDayOfWeek(Calendar.MONDAY);
-        // 获得当前日期是一个星期的第几天
+
         int dayWeek = cal.get(Calendar.DAY_OF_WEEK);
         if (dayWeek == 1) {
             dayWeek = 8;
         }
-        cal.add(Calendar.DATE, cal.getFirstDayOfWeek() - dayWeek);// 根据日历的规则，给当前日期减去星期几与一个星期第一天的差值
+        cal.add(Calendar.DATE, cal.getFirstDayOfWeek() - dayWeek);
         Date mondayDate = cal.getTime();
         String weekBegin = sdf.format(mondayDate);
         cal.add(Calendar.DATE, 4 + cal.getFirstDayOfWeek());
         Date sundayDate = cal.getTime();
         String weekEnd = sdf.format(sundayDate);
-        return String.format("%s 至 %s", weekBegin, weekEnd);
+        return String.format("%s to %s", weekBegin, weekEnd);
     }
 
 
-    private class MealCellRenderer extends DefaultTableCellRenderer {
+    class MealCellRenderer extends DefaultTableCellRenderer {
         @Override
         public Component getTableCellRendererComponent(
                 JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {

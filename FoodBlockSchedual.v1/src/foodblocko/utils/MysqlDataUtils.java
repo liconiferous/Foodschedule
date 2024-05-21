@@ -18,7 +18,7 @@ public class MysqlDataUtils {
     }
 
     /**
-     * 获取数据库连接
+     * Opening connection
      *
      * @return
      */
@@ -33,7 +33,7 @@ public class MysqlDataUtils {
     }
 
     /**
-     * 关闭数据库连接
+     * Closing connection
      *
      * @param conn
      */

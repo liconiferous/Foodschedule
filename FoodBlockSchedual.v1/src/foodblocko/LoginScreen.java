@@ -9,15 +9,15 @@ import java.awt.event.HierarchyListener;
 
 
 public class LoginScreen extends JFrame implements ActionListener {
-    private final JTextField usernameField;
-    private final JPasswordField passwordField;
-    private final JTextField newEmailField;
-    private final JButton loginButton;
+    final JTextField usernameField;
+    final JPasswordField passwordField;
+    final JTextField newEmailField;
+    final JButton loginButton;
     private final JButton registerButton;
-    private final JTextField newUsernameField;
-    private final JPasswordField newPasswordField;
-    private final JPasswordField confirmPasswordField;
-    private final JButton confirmRegistrationButton;
+    final JTextField newUsernameField;
+    final JPasswordField newPasswordField;
+    final JPasswordField confirmPasswordField;
+    final JButton confirmRegistrationButton;
     private final JPanel cards;
    DatabaseConnection DB = new DatabaseConnection();
 
