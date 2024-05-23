@@ -1,13 +1,13 @@
 package foodblocko;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class LoginScreenTest {
@@ -15,7 +15,7 @@ public class LoginScreenTest {
     private LoginScreen loginScreen;
     private DatabaseConnection mockDB;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         mockDB = mock(DatabaseConnection.class);
         loginScreen = new LoginScreen();

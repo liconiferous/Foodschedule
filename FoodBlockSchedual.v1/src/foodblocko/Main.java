@@ -211,7 +211,12 @@ class DatabaseConnection {
 
 
 public class Main {
+
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(LoginScreen::new);
+        new Main().init();
+    }
+
+    void init() {
+        SwingUtilities.invokeLater(() -> new LoginScreen());
     }
 }

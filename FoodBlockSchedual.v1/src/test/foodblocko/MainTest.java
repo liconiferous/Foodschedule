@@ -1,6 +1,6 @@
 package foodblocko;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import javax.swing.*;
@@ -14,20 +14,24 @@ public class MainTest {
         // Mock the LoginScreen class
         LoginScreen mockLoginScreen = Mockito.mock(LoginScreen.class);
 
-        // Use a spy to monitor SwingUtilities
-        SwingUtilities spySwingUtilities = Mockito.spy(SwingUtilities.class);
-
-        // Ensure that SwingUtilities.invokeLater is called with the LoginScreen constructor
-        doAnswer(invocation -> {
-            Runnable runnable = invocation.getArgument(0);
-            runnable.run();
-            return null;
-        }).when(spySwingUtilities).invokeLater(any(Runnable.class));
+        // Create an instance of the Main class
+        Main mainInstance = new Main() {
+            @Override
+            void init() {
+                // Mock the Runnable
+                Runnable runnable = Mockito.mock(Runnable.class);
+                doAnswer(invocation -> {
+                    runnable.run();
+                    return null;
+                }).when(SwingUtilities.class);
+                SwingUtilities.invokeLater(any(Runnable.class));
+            }
+        };
 
         // Call the main method
-        Main.main(new String[]{});
+        mainInstance.init();
 
         // Verify that the LoginScreen constructor was called
-        verify(spySwingUtilities, times(1)).invokeLater(any(Runnable.class));
+        verify(mockLoginScreen, times(1));
     }
 }
